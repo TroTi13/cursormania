@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO cursor mania</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #f0f0f0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #me {
+        background: red;
+      }
+
+      .cursor {
+        background: green;
+        height: 10px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        transition: left 100ms, top 100ms;
+        width: 10px;
+      }
+
+      #canvas {
+        background: #fff;
+        border: 1px solid red;
+        display: block;
+        height: 100vh;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+
+    <canvas id="canvas" width="1024" height="1024"></canvas>
+
+    <!--div id="me" class="cursor"></div-->
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+  </body>
+</html>

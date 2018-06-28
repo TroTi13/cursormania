@@ -1,0 +1,15 @@
+{
+  "name": "cursormania",
+  "version": "1.0.0",
+  "description": "Live cursor view",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
