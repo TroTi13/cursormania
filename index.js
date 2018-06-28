@@ -7,33 +7,34 @@ const io = socketio(server);
 
 app.use(express.static(__dirname + '/public'));
 
-let sockets = [];
+var sockets = [];
 
-io.on('connection', (socket) => {
+io.on('connection', function (socket) {
     console.log('a user connected', socket.id);
 
     sockets.push(socket.id);
 
     io.emit('connected', {
         id: socket.id,
-        sockets,
+        sockets: sockets,
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', function () {
         console.log('user disconnected', socket.id);
-        sockets = sockets.filter((s) => s.id !== socket.id);
+        sockets = sockets.filter(function(s) { return s.id !== socket.id; });
         io.emit('disconnected', {
             id: socket.id,
         });
     });
 
-    socket.on('move', (coordinates) => {
+    socket.on('move', function (coordinates) {
         // console.log('move', coordinates);
         io.emit('othermove', {
-            ...coordinates,
+            x: coordinates.x,
+            y: coordinates.y,
             id: socket.id,
         });
     });
 });
 
-server.listen(3000, () => console.log('listening on *:3000'));
+server.listen(3000, function () { console.log('listening on *:3000'); });

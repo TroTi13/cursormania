@@ -1,10 +1,10 @@
-(() => {
+(function () {
     const cursormania = {
         settings: {
             animId: null,
             sockets: [],
         },
-        init: () => {
+        init: function () {
             const s = cursormania.settings;
 
             s.socket = io();
@@ -14,7 +14,7 @@
             s.$canvas.width = window.innerWidth;
             s.$canvas.height = window.innerHeight;
 
-            s.socket.on('connect', () => {
+            s.socket.on('connect', function () {
                 s.sockets.push({
                     id: s.socket.id,
                     x: 0,
@@ -22,40 +22,40 @@
                 });
             });
 
-            s.socket.on('connected', ({ id }) => {
-                console.log('other connected', s.sockets, id, s.socket.id);
+            s.socket.on('connected', function (data) {
+                console.log('other connected', s.sockets, data.id, s.socket.id);
 
-                if(id !== s.socket.id) {
+                if(data.id !== s.socket.id) {
                     s.sockets.push({
-                        id,
+                        id: data.id,
                         x: 0,
                         y: 0,
                     });
                 }
             });
-            s.socket.on('disconnected', ({ id }) => {
-                s.sockets = s.sockets.filter((socket) => socket.id !== id);
+            s.socket.on('disconnected', function (data) {
+                s.sockets = s.sockets.filter(function (socket) { return socket.id !== data.id; });
             });
 
-            s.socket.on('othermove', ({ id, x, y }) => {
-                if (!s.sockets.filter((socket) => socket.id === id).length) {
+            s.socket.on('othermove', function (data) {
+                if (!s.sockets.filter(function(socket) { return socket.id === data.id}).length) {
                     s.sockets.push({
-                        id,
-                        x,
-                        y,
+                        id: data.id,
+                        x: data.x,
+                        y: data.y,
                     });
                 }
-                s.sockets = s.sockets.map((socket) => {
-                    if (socket.id === id) {
-                        socket.x = x;
-                        socket.y = y;
+                s.sockets = s.sockets.map(function (socket) {
+                    if (socket.id === data.id) {
+                        socket.x = data.x;
+                        socket.y = data.y;
                     }
 
                     return socket;
                 });
             });
 
-            s.$canvas.addEventListener('mousemove', (e) => {
+            s.$canvas.addEventListener('mousemove', function(e) {
                 console.log('move', s.sockets);
 
                 s.socket.emit('move', {
@@ -66,24 +66,24 @@
 
             cursormania.loop();
         },
-        loop: () => {
+        loop: function() {
             const s = cursormania.settings;
 
             cursormania.draw();
 
             s.animId = requestAnimationFrame(cursormania.loop);
         },
-        stop: () => {
+        stop: function() {
             const s = cursormania.settings;
 
             cancelAnimationFrame(s.animId);
         },
-        draw: () => {
+        draw: function() {
             const s = cursormania.settings;
 
             s.context.clearRect(0, 0, s.$canvas.width, s.$canvas.height);
 
-            s.sockets.forEach((socket) => {
+            s.sockets.forEach(function(socket) {
                 s.context.save();
                 if (socket.id === s.socket.id) {
                     s.context.fillStyle = 'green';
